@@ -14,7 +14,7 @@ let posts = [
     {
         id: "1",
         title: "Welcome to My Blog",
-        author: "Alex Mercer",
+        author: "Rudy Ochoa",
         content: "This is a sample blog post built with Node.js, Express, and EJS. Data is safely managed in an array on the server side!",
         category: "Tech",
         createdAt: new Date().toLocaleString()
