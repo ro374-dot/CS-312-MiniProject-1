@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Blog Space</title>
+    <!-- Bootstrap 5 CSS Framework for Responsiveness -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-dark bg-dark mb-4 shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">📝 NodeBlog Space</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <!-- Left Side: Post Creation Form -->
+            <div class="col-md-5 mb-4">
+                <div class="card shadow-sm p-4 sticky-top style-form-card">
+                    <h3 class="mb-3 text-primary fw-semibold">Create a New Post</h3>
+                    <form action="/posts" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Your Name</label>
+                            <input type="text" name="author" class="form-control" placeholder="e.g., Jane Doe" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Blog Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Catchy title..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category (Bonus)</label>
+                            <select name="category" class="form-select">
+                                <option value="Tech">Tech</option>
+                                <option value="Lifestyle">Lifestyle</option>
+                                <option value="Education">Education</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Content</label>
+                            <textarea name="content" class="form-control" rows="5" placeholder="Write your content here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold">Publish Post</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Side: Filter and Post Feed -->
+            <div class="col-md-7">
+                <!-- Bonus Filter Dropdown -->
+                <div class="d-flex justify-content-between align-items-center mb-3 bg-white p-3 rounded shadow-sm">
+                    <span class="fw-semibold">Filter Feed:</span>
+                    <form action="/" method="GET" class="d-flex align-items-center gap-2">
+                        <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="All" <%= currentCategory === 'All' ? 'selected' : '' %>>All Categories</option>
+                            <option value="Tech" <%= currentCategory === 'Tech' ? 'selected' : '' %>>Tech</option>
+                            <option value="Lifestyle" <%= currentCategory === 'Lifestyle' ? 'selected' : '' %>>Lifestyle</option>
+                            <option value="Education" <%= currentCategory === 'Education' ? 'selected' : '' %>>Education</option>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Feed Loops -->
+                <% if(posts.length === 0) { %>
+                    <div class="alert alert-warning text-center">No posts found in this section yet!</div>
+                <% } else { %>
+                    <% posts.forEach(post => { %>
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h4 class="card-title text-dark mb-0 fw-bold"><%= post.title %></h4>
+                                    <span class="badge bg-secondary"><%= post.category %></span>
+                                </div>
+                                <h6 class="card-subtitle text-muted small mb-3">By <%= post.author %> • <span class="text-black-50"><%= post.createdAt %></span></h6>
+                                <p class="card-text text-secondary" style="white-space: pre-wrap;"><%= post.content %></p>
+                                
+                                <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-3">
+                                    <a href="/edit/<%= post.id %>" class="btn btn-outline-warning btn-sm fw-medium">Edit</a>
+                                    
+                                    <!-- Safe Delete Action Mapping -->
+                                    <form action="/delete/<%= post.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm fw-medium">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-muted py-4 mt-5 bg-white border-top">
+        <p class="mb-0">CS-312 Mini Project 1 • Non-Persistent Storage</p>
+    </footer>
+</body>
+</html>
